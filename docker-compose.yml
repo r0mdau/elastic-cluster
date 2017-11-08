@@ -67,9 +67,9 @@ services:
     networks:
       - esnet
 
-  elastic-data-3:
+  elastic-hybrid:
     image: elasticsearch:5.6.4
-    container_name: elastic-data-3
+    container_name: elastic-hybrid
     environment:
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     ulimits:
@@ -79,7 +79,7 @@ services:
     mem_limit: 1g
     volumes:
       - ./esdata3:/usr/share/elasticsearch/data
-      - ./conf/elastic-data-3.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - ./conf/elastic-hybrid.yml:/usr/share/elasticsearch/config/elasticsearch.yml
     networks:
       - esnet
 
