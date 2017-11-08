@@ -1,0 +1,7 @@
+cluster.name: "docker-cluster"
+network.host: 0.0.0.0
+bootstrap.memory_lock: true
+discovery.zen.minimum_master_nodes: 2
+discovery.zen.ping.unicast.hosts: ["elastic-master-1", "elastic-master-2", "elastic1"]
+node.master: false
+node.data: true

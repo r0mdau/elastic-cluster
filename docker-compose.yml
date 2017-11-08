@@ -1,12 +1,44 @@
 version: '2'
 services:
 
-  elastic1:
+  elastic-master-1:
     image: elasticsearch:5.6.4
-    container_name: elastic1
+    container_name: elastic-master-1
     environment:
-      - cluster.name=docker-cluster
-      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    mem_limit: 1g
+    volumes:
+      - ./conf/elastic-master-1.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+    ports:
+      - 9201:9200
+    networks:
+      - esnet
+
+  elastic-master-2:
+    image: elasticsearch:5.6.4
+    container_name: elastic-master-2
+    environment:
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    mem_limit: 1g
+    volumes:
+      - ./conf/elastic-master-2.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+    ports:
+      - 9202:9200
+    networks:
+      - esnet
+
+  elastic-data-1:
+    image: elasticsearch:5.6.4
+    container_name: elastic-data-1
+    environment:
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     ulimits:
       memlock:
@@ -15,20 +47,14 @@ services:
     mem_limit: 1g
     volumes:
       - ./esdata1:/usr/share/elasticsearch/data
-      - ./elastic1.yml:/usr/share/elasticsearch/config/elasticsearch.yml
-    expose:
-      - 9200
-    ports:
-      - 9200:9200
+      - ./conf/elastic-data-1.yml:/usr/share/elasticsearch/config/elasticsearch.yml
     networks:
       - esnet
 
-  elastic2:
+  elastic-data-2:
     image: elasticsearch:5.6.4
-    container_name: elastic2
+    container_name: elastic-data-2
     environment:
-      - cluster.name=docker-cluster
-      - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     ulimits:
       memlock:
@@ -37,16 +63,14 @@ services:
     mem_limit: 1g
     volumes:
       - ./esdata2:/usr/share/elasticsearch/data
-      - ./elastic2.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - ./conf/elastic-data-2.yml:/usr/share/elasticsearch/config/elasticsearch.yml
     networks:
       - esnet
 
-  elastic3:
+  elastic-data-3:
     image: elasticsearch:5.6.4
-    container_name: elastic3
+    container_name: elastic-data-3
     environment:
-      - cluster.name=docker-cluster
-      - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     ulimits:
       memlock:
@@ -55,7 +79,7 @@ services:
     mem_limit: 1g
     volumes:
       - ./esdata3:/usr/share/elasticsearch/data
-      - ./elastic3.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - ./conf/elastic-data-3.yml:/usr/share/elasticsearch/config/elasticsearch.yml
     networks:
       - esnet
 
@@ -65,7 +89,7 @@ services:
     ports:
       - 5601:5601
     links:
-      - elastic1:elasticsearch
+      - elastic-master-1:elasticsearch
     networks:
       - esnet
 
