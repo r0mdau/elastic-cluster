@@ -35,6 +35,21 @@ services:
     networks:
       - esnet
 
+  elastic-master-3:
+    image: elasticsearch:5.6.4
+    container_name: elastic-master-3
+    environment:
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    mem_limit: 1g
+    volumes:
+      - ./conf/elastic-master-3.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+    networks:
+      - esnet
+
   elastic-data-1:
     image: elasticsearch:5.6.4
     container_name: elastic-data-1
@@ -46,7 +61,6 @@ services:
         hard: -1
     mem_limit: 1g
     volumes:
-      - ./esdata1:/usr/share/elasticsearch/data
       - ./conf/elastic-data-1.yml:/usr/share/elasticsearch/config/elasticsearch.yml
     networks:
       - esnet
@@ -62,14 +76,13 @@ services:
         hard: -1
     mem_limit: 1g
     volumes:
-      - ./esdata2:/usr/share/elasticsearch/data
       - ./conf/elastic-data-2.yml:/usr/share/elasticsearch/config/elasticsearch.yml
     networks:
       - esnet
 
-  elastic-hybrid:
+  elastic-data-3:
     image: elasticsearch:5.6.4
-    container_name: elastic-hybrid
+    container_name: elastic-data-3
     environment:
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     ulimits:
@@ -78,8 +91,22 @@ services:
         hard: -1
     mem_limit: 1g
     volumes:
-      - ./esdata3:/usr/share/elasticsearch/data
-      - ./conf/elastic-hybrid.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - ./conf/elastic-data-3.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+    networks:
+      - esnet
+
+  elastic-client-1:
+    image: elasticsearch:5.6.4
+    container_name: elastic-client-1
+    environment:
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    mem_limit: 1g
+    volumes:
+      - ./conf/elastic-client-1.yml:/usr/share/elasticsearch/config/elasticsearch.yml
     networks:
       - esnet
 
@@ -89,7 +116,7 @@ services:
     ports:
       - 5601:5601
     links:
-      - elastic-master-1:elasticsearch
+      - elastic-client-1:elasticsearch
     networks:
       - esnet
 
